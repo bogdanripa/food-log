@@ -31,8 +31,6 @@ jobs:
           runtime: nodejs22
           entry_point: oauth
           source_dir: .
-          trigger_http: true
-          allow_unauthenticated: true
           environment_variables: |-
             GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
             GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
