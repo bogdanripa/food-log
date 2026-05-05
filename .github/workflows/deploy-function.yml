@@ -30,7 +30,7 @@ jobs:
           region: europe-west1
           runtime: nodejs22
           entry_point: oauth
-          source_dir: .
+          source_dir: ./function
           environment_variables: |-
             GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
             GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
