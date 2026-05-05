@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Food Log — Privacy Policy</title>
+<style>
+  :root { color-scheme: light; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 48px 24px;
+    line-height: 1.6;
+    color: #1a1a1a;
+    background: #fafafa;
+  }
+  h1 { font-size: 28px; font-weight: 600; margin-bottom: 8px; }
+  .updated { color: #666; font-size: 14px; margin-bottom: 32px; }
+  h2 { font-size: 20px; margin-top: 32px; }
+  p { margin: 12px 0; }
+  ul { padding-left: 20px; }
+  li { margin: 6px 0; }
+  code { background: #efefef; padding: 2px 6px; border-radius: 4px; font-size: 0.92em; }
+  a { color: #2563eb; }
+  footer { margin-top: 48px; font-size: 14px; color: #666; border-top: 1px solid #ddd; padding-top: 16px; }
+</style>
+</head>
+<body>
+
+<h1>Privacy Policy</h1>
+<p class="updated">Last updated: May 5, 2026</p>
+
+<p>This privacy policy describes how Food Log handles your data when you use the application.</p>
+
+<h2>What data Food Log accesses</h2>
+<p>Food Log requests one Google OAuth scope: <code>https://www.googleapis.com/auth/drive.file</code>. This scope grants access only to files the app itself creates or that you explicitly open with the app. Food Log cannot see, read, modify, or delete any other files in your Google Drive.</p>
+
+<p>Specifically, Food Log creates and accesses:</p>
+<ul>
+  <li>One Google Sheets spreadsheet (titled "Food Log" by default) where your meal entries are stored.</li>
+  <li>One Google Drive folder (titled "Food Log Photos") where photos you submit are uploaded.</li>
+</ul>
+
+<h2>What data you provide</h2>
+<p>When you use Food Log, the data stored in your spreadsheet may include:</p>
+<ul>
+  <li>Descriptions of meals and drinks (what you ate, where, when)</li>
+  <li>Estimated nutritional values (calories, macronutrients)</li>
+  <li>Photos you upload of your meals</li>
+  <li>Personal context you choose to provide (height, weight, dietary preferences) used to compute baseline calorie targets</li>
+</ul>
+
+<h2>Where your data is stored</h2>
+<p>All data is stored in your own Google account. Food Log does not operate any servers, does not collect or transmit your data to any third party, and does not have access to your data outside of your active session.</p>
+
+<h2>What data the app developer can see</h2>
+<p>The app developer (Bogdan Ripa) does not have access to your spreadsheet, your photos, or any data you log. The OAuth flow grants access tokens directly between Google and the application instance running for you; no data passes through any developer-controlled infrastructure.</p>
+
+<h2>Third-party services</h2>
+<p>Food Log uses Google APIs (Google Sheets API and Google Drive API) to read and write data within your own Google account. Use of these APIs is subject to <a href="https://developers.google.com/terms/api-services-user-data-policy">Google's API Services User Data Policy</a>, including the Limited Use requirements.</p>
+
+<p>Food Log's use and transfer of information received from Google APIs adheres to the <a href="https://developers.google.com/terms/api-services-user-data-policy#limited-use">Google API Services User Data Policy</a>, including the Limited Use requirements.</p>
+
+<h2>Data retention and deletion</h2>
+<p>You control your own data. You can delete the spreadsheet, the photos folder, or revoke the app's access at any time:</p>
+<ul>
+  <li>To delete data: open your Google Drive and delete the "Food Log" spreadsheet and the "Food Log Photos" folder.</li>
+  <li>To revoke access: visit <a href="https://myaccount.google.com/permissions">myaccount.google.com/permissions</a>, find Food Log, and remove access.</li>
+</ul>
+
+<h2>Children's privacy</h2>
+<p>Food Log is not directed at children under 13 and does not knowingly collect data from children.</p>
+
+<h2>Changes to this policy</h2>
+<p>If this privacy policy changes, the "Last updated" date at the top of the page will reflect the change. The current version is always available at this URL.</p>
+
+<h2>Contact</h2>
+<p>For questions about this privacy policy or the application: <a href="mailto:bogdanripa@gmail.com">bogdanripa@gmail.com</a></p>
+
+<footer>
+  <p><a href="index.html">← Back to homepage</a></p>
+</footer>
+</body>
+</html>

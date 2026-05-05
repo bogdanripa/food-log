@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Food Log</title>
+<style>
+  :root { color-scheme: light; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 48px 24px;
+    line-height: 1.6;
+    color: #1a1a1a;
+    background: #fafafa;
+  }
+  header { display: flex; align-items: center; gap: 16px; margin-bottom: 32px; }
+  header img { width: 64px; height: 64px; border-radius: 12px; }
+  header h1 { margin: 0; font-size: 28px; font-weight: 600; }
+  h2 { font-size: 20px; margin-top: 32px; }
+  p { margin: 12px 0; }
+  ul { padding-left: 20px; }
+  li { margin: 6px 0; }
+  code { background: #efefef; padding: 2px 6px; border-radius: 4px; font-size: 0.92em; }
+  footer { margin-top: 48px; font-size: 14px; color: #666; border-top: 1px solid #ddd; padding-top: 16px; }
+  a { color: #2563eb; }
+</style>
+</head>
+<body>
+<header>
+  <img src="logo.png" alt="Food Log logo">
+  <h1>Food Log</h1>
+</header>
+
+<p>Food Log is a personal meal and drink tracker. It logs what you eat and drink to your own Google Sheet, with optional photos saved to your own Google Drive.</p>
+
+<h2>What it does</h2>
+<ul>
+  <li>You describe a meal in plain language ("had a flat white this morning") or send a photo.</li>
+  <li>The app estimates macros (calories, carbs, protein, fat, sugars, alcohol) and appends a row to your Google Sheet.</li>
+  <li>Photos are uploaded to a folder the app creates in your Drive.</li>
+  <li>Later, you can ask for trends, gaps in your diet, or recommendations grounded in your history.</li>
+</ul>
+
+<h2>Where your data lives</h2>
+<p>Your data lives in your own Google account: one spreadsheet the app creates for you, and one Drive folder for photos. The app never sees any other files in your Drive.</p>
+
+<h2>How it works technically</h2>
+<p>Food Log uses Google's <code>drive.file</code> OAuth scope, which only grants access to files the app itself creates. It cannot read, modify, or delete any other files in your Drive. Authentication happens through Google's standard OAuth flow.</p>
+
+<h2>Source and privacy</h2>
+<p>Food Log is a personal-use project, not a commercial product. See the <a href="privacy.html">privacy policy</a> for details on data handling.</p>
+
+<footer>
+  <p>Contact: <a href="mailto:bogdanripa@gmail.com">bogdanripa@gmail.com</a></p>
+</footer>
+</body>
+</html>
