@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Food Log — Authentication</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 48px 24px;
+    line-height: 1.5;
+    color: #1a1a1a;
+    background: #fafafa;
+  }
+  header { display: flex; align-items: center; gap: 16px; margin-bottom: 32px; }
+  header img { width: 56px; height: 56px; border-radius: 12px; }
+  header h1 { margin: 0; font-size: 24px; font-weight: 600; }
+  .status { padding: 16px; border-radius: 10px; margin-bottom: 24px; }
+  .status.success { background: #e8f5e9; border: 1px solid #a5d6a7; }
+  .status.error   { background: #ffebee; border: 1px solid #ef9a9a; }
+  .status.loading { background: #e3f2fd; border: 1px solid #90caf9; }
+  .status h2 { margin: 0 0 6px; font-size: 17px; font-weight: 600; }
+  .status p  { margin: 0; font-size: 15px; color: #333; }
+  textarea {
+    width: 100%;
+    font-family: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+    font-size: 12px;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: #fff;
+    resize: vertical;
+    min-height: 140px;
+  }
+  button {
+    margin-top: 12px;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 8px;
+    background: #2563eb;
+    color: white;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  button:hover { background: #1d4ed8; }
+  button.copied { background: #16a34a; }
+  ol li, ul li { margin: 6px 0; }
+  .label { font-size: 13px; color: #666; margin: 16px 0 6px; }
+  details { margin-top: 24px; font-size: 14px; color: #555; }
+  summary { cursor: pointer; }
+  footer { margin-top: 40px; font-size: 13px; color: #888; border-top: 1px solid #ddd; padding-top: 14px; }
+  a { color: #2563eb; }
+  .spinner {
+    display: inline-block;
+    width: 14px; height: 14px;
+    border: 2px solid #90caf9;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<header>
+  <img src="logo.png" alt="Food Log logo" onerror="this.style.display='none'">
+  <h1>Food Log Authentication</h1>
+</header>
+
+<div id="result"></div>
+
+<footer>
+  <p>This page is part of the <a href="index.html">Food Log</a> authentication flow. The authorization code Google sent you is exchanged for a token via a server-side function; the token is then displayed here for you to paste back into your Claude conversation. The token is not stored or logged.</p>
+</footer>
+
+<script>
+(function () {
+  const FUNCTION_URL = "https://europe-west1-food-log-494913.cloudfunctions.net/food-oauth";
+
+  const params = new URLSearchParams(window.location.search);
+  const code = params.get('code');
+  const error = params.get('error');
+  const errorDescription = params.get('error_description');
+
+  const container = document.getElementById('result');
+
+  if (error) {
+    container.innerHTML = `
+      <div class="status error">
+        <h2>Authentication failed</h2>
+        <p><strong>${escapeHtml(error)}</strong>${errorDescription ? ': ' + escapeHtml(errorDescription) : ''}</p>
+      </div>
+      <p>What to do next, depending on what happened:</p>
+      <ul>
+        <li>If you saw "Access blocked: Food Log has not completed the Google verification process" before this page loaded, the OAuth app is in development mode and your email isn't on the test-user list. WhatsApp Bogdan with the Gmail address you tried to sign in with — he'll add you, then you can retry.</li>
+        <li>If you cancelled or denied access, just go back to your Claude conversation and ask to retry.</li>
+      </ul>
+    `;
+    return;
+  }
+
+  if (!code) {
+    container.innerHTML = `
+      <div class="status error">
+        <h2>No authorization code received</h2>
+        <p>This page was opened without an OAuth response in the URL. You probably navigated here directly. Go back to your Claude conversation and start the sign-in flow from there.</p>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = `
+    <div class="status loading">
+      <h2><span class="spinner"></span>Exchanging authorization code…</h2>
+      <p>One moment — finishing the sign-in.</p>
+    </div>
+  `;
+
+  exchangeCode(code).then(showSuccess).catch(showFailure);
+
+  async function exchangeCode(code) {
+    const resp = await fetch(FUNCTION_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code })
+    });
+    if (!resp.ok) {
+      let bodyText = '';
+      try { const j = await resp.json(); bodyText = j.error || JSON.stringify(j); }
+      catch { bodyText = await resp.text().catch(() => ''); }
+      throw new Error(`${resp.status} ${bodyText}`);
+    }
+    return await resp.json();
+  }
+
+  function showSuccess(tokens) {
+    const tokenJson = JSON.stringify(tokens, null, 2);
+    container.innerHTML = `
+      <div class="status success">
+        <h2>Almost done</h2>
+        <p>You authenticated successfully. Copy the text below and paste it back into your Claude conversation.</p>
+      </div>
+      <div class="label">Paste this into your Claude chat:</div>
+      <textarea id="paste-target" readonly></textarea>
+      <button id="copy-btn" type="button">Copy to clipboard</button>
+      <details>
+        <summary>What is this?</summary>
+        <p>The text above is your OAuth token — credentials that let the Food Log skill write to your Google Sheet. The skill will save it locally to a <code>token.json</code> file. The token expires automatically and refreshes silently after that.</p>
+        <p>The token was generated by Google, exchanged via a stateless function, and shown to you. Once you paste it into Claude, it lives only in your conversation.</p>
+      </details>
+    `;
+    const ta = document.getElementById('paste-target');
+    ta.value = tokenJson;
+    ta.style.minHeight = Math.min(360, 22 + tokenJson.split('\n').length * 18) + 'px';
+    ta.select();
+    const btn = document.getElementById('copy-btn');
+    btn.addEventListener('click', async () => {
+      try { await navigator.clipboard.writeText(tokenJson); }
+      catch { ta.select(); document.execCommand('copy'); }
+      btn.textContent = 'Copied — now paste it in your Claude chat';
+      btn.classList.add('copied');
+    });
+  }
+
+  function showFailure(err) {
+    container.innerHTML = `
+      <div class="status error">
+        <h2>Token exchange failed</h2>
+        <p>The authorization code couldn't be exchanged for a token. This usually means the code expired (they last ~10 minutes) or was already used.</p>
+      </div>
+      <p>Go back to your Claude conversation, ask to retry, and finish the paste-back quickly.</p>
+      <details>
+        <summary>Technical details</summary>
+        <p style="font-family: ui-monospace, monospace; font-size: 12px; word-break: break-all;">${escapeHtml(err.message || String(err))}</p>
+      </details>
+    `;
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
+  }
+})();
+</script>
+</body>
+</html>
