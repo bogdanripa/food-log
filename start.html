@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Food Log — Sign in</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 80px 24px;
+    text-align: center;
+    color: #1a1a1a;
+    background: #fafafa;
+  }
+  h1 { font-size: 22px; font-weight: 600; margin-bottom: 16px; }
+  p { color: #555; margin: 12px 0; }
+  .spinner {
+    display: inline-block;
+    width: 24px; height: 24px;
+    border: 3px solid #90caf9;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    margin: 24px auto;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  a { color: #2563eb; }
+  .fallback { margin-top: 32px; font-size: 14px; }
+</style>
+</head>
+<body>
+
+<h1>Redirecting you to Google sign-in…</h1>
+<div class="spinner"></div>
+<p>If nothing happens in a few seconds, <a id="manual-link" href="#">tap here</a>.</p>
+
+<script>
+(function () {
+  // Build a fresh OAuth URL with a random state parameter and redirect.
+  const CLIENT_ID = "510005622541-5pivsv187k62dnu9vq2u0uvu9hrardbg.apps.googleusercontent.com";
+  const REDIRECT_URI = "https://bogdanripa.github.io/food-log/auth-callback.html";
+  const SCOPE = "https://www.googleapis.com/auth/drive.file";
+
+  // Generate a random state value (URL-safe base64ish)
+  function randomState(len) {
+    const bytes = new Uint8Array(len);
+    (window.crypto || window.msCrypto).getRandomValues(bytes);
+    return Array.from(bytes, b => ('0' + (b & 0xff).toString(16)).slice(-2)).join('');
+  }
+
+  const params = new URLSearchParams({
+    response_type: "code",
+    client_id: CLIENT_ID,
+    redirect_uri: REDIRECT_URI,
+    scope: SCOPE,
+    state: randomState(16),
+    access_type: "offline",
+    prompt: "consent",
+    include_granted_scopes: "true"
+  });
+  const url = "https://accounts.google.com/o/oauth2/auth?" + params.toString();
+
+  document.getElementById('manual-link').href = url;
+
+  // Redirect after a short delay so the user sees the spinner if the redirect is slow
+  setTimeout(() => { window.location.replace(url); }, 200);
+})();
+</script>
+
+</body>
+</html>
