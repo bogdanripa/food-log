@@ -34,4 +34,4 @@ jobs:
           environment_variables: |-
             GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
             GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
-            REDIRECT_URI=https://europe-west1-food-log-494913.cloudfunctions.net/food-oauth/callback
+            REDIRECT_URI=${{ secrets.REDIRECT_URI }}
