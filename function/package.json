@@ -2,7 +2,7 @@
   "name": "food-oauth-function",
   "version": "1.0.0",
   "description": "Food Log OAuth code-exchange function",
-  "main": "main.js",
+  "main": "index.js",
   "engines": {
     "node": ">=18"
   },
