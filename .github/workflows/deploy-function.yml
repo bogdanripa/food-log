@@ -1,0 +1,39 @@
+name: Deploy OAuth Function
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Auth to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Deploy Cloud Function
+        uses: google-github-actions/deploy-cloud-functions@v3
+        with:
+          name: food-oauth
+          project_id: food-log-494913
+          region: europe-west1
+          runtime: nodejs22
+          entry_point: oauth
+          source_dir: .
+          trigger_http: true
+          allow_unauthenticated: true
+          environment_variables: |-
+            GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
+            GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
+            REDIRECT_URI=https://europe-west1-food-log-494913.cloudfunctions.net/food-oauth/callback

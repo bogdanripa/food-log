@@ -1,0 +1,12 @@
+{
+  "name": "food-oauth-function",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "functions-framework --target=oauth"
+  },
+  "dependencies": {
+    "@google-cloud/functions-framework": "^3.4.0",
+    "googleapis": "^144.0.0"
+  }
+}
